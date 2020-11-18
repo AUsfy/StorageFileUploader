@@ -4,49 +4,61 @@ using System;
 using System.IO;
 using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using CommandLine;
+using System.Collections.Generic;
 
 namespace StorageFileUploader
 {
     public class Program
     {
-        static async Task Main(string[] args)
+        public class Options
         {
-            var accountName = "storageacounttest1";
-            var saskey = @"?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-11-19T04:21:38Z&st=2020-11-18T20:21:38Z&spr=https&sig=BT%2BuwyrzBnBT8P4Crzsm2%2FKQJzWbsiPvHpii7O%2BJgK0%3D";
-            var containerName = "test-container";
-            var blobName = "file.txt";
-            var FileToUploadPath = @"D:\Code\Test\index.html";
+            [Option('s', "storageaccount", Required = true, HelpText = "Storage account name.")]
+            public string StorageAccountName { get; set; }
 
-            string sharedConnectionString = ConstructSharedConnectionString(accountName, saskey);
-            var storageBlobClient = CreateBlobClientService(sharedConnectionString, false);
-            BlobContainerClient containerClient = storageBlobClient.GetBlobContainerClient(containerName);
-            await containerClient.CreateIfNotExistsAsync();
-            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+            [Option('f', "filepath", Required = true, HelpText = "File to upload path.")]
+            public string FilePath { get; set; }
 
-            using FileStream uploadFileStream = File.OpenRead(FileToUploadPath);
-            await blobClient.UploadAsync(uploadFileStream);
+
+            [Option('k', "saskey", Required = true, HelpText = "Storage sas key.")]
+            public string Saskey { get; set; }
+
+
+            [Option('c', "containername", Required = false, HelpText = "Container name.")]
+            public string ContainerName { get; set; }
+
+            [Option('b', "blobname", Required = false, HelpText = "Blob name.")]
+            public string BlobName { get; set; }
+
         }
 
-     
-        static string ConstructSharedConnectionString(string storageAccountName, string sasKey)
+        static void Main(string[] args)
         {
-            if (string.IsNullOrEmpty(storageAccountName))
-                throw new ArgumentException("Storage account name is invalid (null or empty)");
-            if (string.IsNullOrEmpty(sasKey))
-                throw new ArgumentException("Saskey is ivalid (null or empty)");
+            CommandLine.Parser.Default.ParseArguments<Options>(args)
+              .WithParsed(RunOptions)
+              .WithNotParsed(HandleParseError);
+        }
+        static void RunOptions(Options opts)
+        {
+            //handle options
 
-            string sharedConnectionString = $"BlobEndpoint=https://{storageAccountName}.blob.core.windows.net;SharedAccessSignature={sasKey}";
-            return sharedConnectionString;
+            StorageClient.UploadFileToStorageAsync(opts.StorageAccountName, opts.Saskey, opts.FilePath, opts.ContainerName, opts.BlobName).GetAwaiter().GetResult();
+        }
+        static void HandleParseError(IEnumerable<Error> errs)
+        {
+            //handle errors
         }
 
-        static BlobServiceClient CreateBlobClientService(string sharedConnectionString, bool isStorageLocal = false)
-        {
-            if (isStorageLocal)
-                return new BlobServiceClient("UseDevelopmentStorage=true");
+        //static async Task Main(string[] args)
+        //{
+        //    var accountName = "storageacounttest1";
+        //    var saskey = @"?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-11-19T04:21:38Z&st=2020-11-18T20:21:38Z&spr=https&sig=BT%2BuwyrzBnBT8P4Crzsm2%2FKQJzWbsiPvHpii7O%2BJgK0%3D";
+        //    var containerName = "test-container";
+        //    var blobName = "file.txt";
+        //    var FileToUploadPath = @"D:\Code\Test\index.html";
+        //    await StorageClient.UploadFileToStorageAsync(accountName, saskey, FileToUploadPath);
 
-            else
-                return new BlobServiceClient(sharedConnectionString);
 
-        }
+        //}
     }
 }
