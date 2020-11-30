@@ -1,6 +1,6 @@
 # StorageFileUploader
 
-Simple .NET 5 console application to upload files to storage. The application can be used directly once downloaded and copied, you don't need to install anything. Can be used on any OS (Windows, linux..).
+Simple .NET 5 console application to upload files to storage. The application can be used directly once downloaded and copied, you don't need to install anything. The application is cross-plateform.
 
 ## How to use StorageFileUploader:
 
