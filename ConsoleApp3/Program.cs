@@ -48,17 +48,5 @@ namespace StorageFileUploader
         {
             //handle errors
         }
-
-        //static async Task Main(string[] args)
-        //{
-        //    var accountName = "storageacounttest1";
-        //    var saskey = @"?sv=2019-12-12&ss=bfqt&srt=sco&sp=rwdlacupx&se=2020-11-19T04:21:38Z&st=2020-11-18T20:21:38Z&spr=https&sig=BT%2BuwyrzBnBT8P4Crzsm2%2FKQJzWbsiPvHpii7O%2BJgK0%3D";
-        //    var containerName = "test-container";
-        //    var blobName = "file.txt";
-        //    var FileToUploadPath = @"D:\Code\Test\index.html";
-        //    await StorageClient.UploadFileToStorageAsync(accountName, saskey, FileToUploadPath);
-
-
-        //}
     }
 }
