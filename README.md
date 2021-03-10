@@ -9,7 +9,7 @@ Simple .NET 5 console application to upload files to storage. The application ca
 - Run StorageFileUploader.exe with the needed arguments. 
 
 ## Example
-```StorageFileUploader.exe --storage  "storage-name" --file "file-path" --saskey "storage-saskey" --containername "container_example" --blobname "example"```
+```StorageFileUploader.exe --storageaccount  "storage-name" --filepath "file-path" --saskey "storage-saskey" --containername "container_example" --blobname "example"```
 
 For now the application supports only sas keys.
 
